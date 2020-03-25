@@ -15,6 +15,9 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
     // BLE prarm
     public static BluetoothGatt mBluetoothGatt;
     public BluetoothAdapter bluetoothAdapter;
-//    private static final UUID myUUIDSevice_temp = UUID.fromString("713d0006-503e-4c75-ba94-3148f18d941e");
+    public BluetoothLeScanner bluetoothLeScanner;
+
+    //    private static final UUID myUUIDSevice_temp = UUID.fromString("713d0006-503e-4c75-ba94-3148f18d941e");
 //    private static final UUID myUUIDChar_temp = UUID.fromString("713d0005-503e-4c75-ba94-3148f18d941e");
     private static final UUID myUUIDSevice_temp = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb");
     private static final UUID myUUIDChar_temp = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
@@ -90,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         final BluetoothManager bluetoothManager =
             (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
+        bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
         // ListView
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         listViewBleDevice = findViewById(R.id.listViewBleDevice);
@@ -285,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
                     output = hexToAscii(s);
                     Log.d(TAG,output);
                 }
-
             }
         }
 
@@ -347,56 +352,50 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void Scan(View view) {
-        if (scanEnable) {
-            // Stops scanning after a pre-defined scan period.
-            handler_scan.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mScanning = false;
-                    scanEnable = true;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            btn_scan.setText("Scan");
-                        }
-                    });
-                    bluetoothAdapter.stopLeScan(leScanCallback);
-                }
-            }, SCAN_PERIOD);
-            // Start to scan
-            mScanning = true;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    btn_scan.setText("Scaning");
-                }
-            });
-            bluetoothAdapter.startLeScan(leScanCallback);
-            scanEnable = false;
-        } else {
-            mScanning = false;
-            scanEnable = true;
-            bluetoothAdapter.stopLeScan(leScanCallback);
-        }
-    }
-    // Device scan callback.
-    private BluetoothAdapter.LeScanCallback leScanCallback =
-        new BluetoothAdapter.LeScanCallback() {
-            @Override
-            public void onLeScan(final BluetoothDevice device, int rssi,
-                                 byte[] scanRecord) {
-                if (device.getName() != null && device.getName().length() > 0) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Put the discovered device to the listview
-                            leDeviceListAdapter.addDevice(device);
-                            leDeviceListAdapter.notifyDataSetChanged();
-                        }
-                    });
-                }
+            if (scanEnable) {
+                // Stops scanning after a pre-defined scan period.
+                handler_scan.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mScanning = false;
+                        scanEnable = true;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                btn_scan.setText("Scan");
+                            }
+                        });
+                        bluetoothLeScanner.stopScan(scanCallback);
+                        Log.d("scan","stop scan");
+                    }
+                }, SCAN_PERIOD);
+                // Start to scan
+                mScanning = true;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        btn_scan.setText("Scaning");
+                    }
+                });
+                bluetoothLeScanner.startScan(scanCallback);
+                scanEnable = false;
+            } else {
+                mScanning = false;
+                scanEnable = true;
+                bluetoothLeScanner.stopScan(scanCallback);
             }
-        };
+    }
+    private ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            if (result.getDevice().getName() != null && result.getDevice().getName().length() > 0) {
+                super.onScanResult(callbackType, result);
+                leDeviceListAdapter.addDevice(result.getDevice());
+                leDeviceListAdapter.notifyDataSetChanged();
+                Log.d("scan", "scaning");
+            }
+        }
+    };
     public void Cancel(View view) {
         if (mBluetoothGatt == null) {
             return;
@@ -433,18 +432,18 @@ public class MainActivity extends AppCompatActivity {
                     counter++;
                 }
                 lastTime = System.currentTimeMillis();
-                handlerTimer.post(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(20);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                );
+//                handlerTimer.post(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                Thread.sleep(20);
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                );
             }
         },1, 2);
     }
