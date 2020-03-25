@@ -37,6 +37,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -66,12 +68,15 @@ public class MainActivity extends AppCompatActivity {
     private HandlerThread handlerThread = new HandlerThread("mhandlerthread");
     private ConcurrentLinkedQueue<String> dataBuffer;
     private String output;
+    private Timer timer;
+    private Handler handlerTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialization();
+        setTimerTask();
     }
 
     private void initialization() {
@@ -94,8 +99,9 @@ public class MainActivity extends AppCompatActivity {
         // Passing data
         handlerThread.start();
         handler_scan = new Handler(handlerThread.getLooper());
+        handlerTimer = new Handler(handlerThread.getLooper());
         dataBuffer = new ConcurrentLinkedQueue<>();
-
+        timer = new Timer();
     }
 
     private void statusCheck() {
@@ -402,4 +408,46 @@ public class MainActivity extends AppCompatActivity {
         btn_scan.setEnabled(true);
         connect = false;
     }
+    private long lastTime = 0;
+    private int counter = 0;
+    private List<Integer> times = new ArrayList<>();
+    private double avg = 0;
+    private void setTimerTask(){
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(counter == 100002) {
+                    for (int i:times
+                         ) {
+                        avg += i;
+                    }
+                    Log.d("Timer:", "" + (avg/100000));
+                    counter++;
+                }
+                else if(counter <= 100001) {
+                    long t = System.currentTimeMillis() - lastTime;
+                    int i = (int)t;
+                    if(i < 50) {
+                        times.add(i);
+                    }
+                    counter++;
+                }
+                lastTime = System.currentTimeMillis();
+                handlerTimer.post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(20);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                );
+            }
+        },1, 2);
+    }
+
+
 }
