@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DEF8FF">
+    android:background="#FFEB3B">
 
     <LinearLayout
         android:id="@+id/llBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="5dp">
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:text="TextView"
             android:textColor="@android:color/black"
-            android:textSize="20sp" />
+            android:textSize="10sp" />
 
     </LinearLayout>
 </LinearLayout>

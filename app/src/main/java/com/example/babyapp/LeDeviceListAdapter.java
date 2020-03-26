@@ -1,6 +1,7 @@
 package com.example.babyapp;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,10 @@ public class LeDeviceListAdapter extends BaseAdapter {
   private LayoutInflater inflater;
   private int indentionBase;         //資料間距
 
-
-  public LeDeviceListAdapter(LayoutInflater inflater) {
+  Context c;
+  public LeDeviceListAdapter(Context c) {
     super();
+    this.c = c;
     mLeDevices = new ArrayList<BluetoothDevice>();
     this.inflater = inflater;
     indentionBase = 50;
@@ -59,6 +61,7 @@ public class LeDeviceListAdapter extends BaseAdapter {
     // General ListView optimization code.
     //初次載入，避免重複初始化
     if (view == null) {
+      LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       view = inflater.inflate(R.layout.listview, null);
       viewHolder = new ViewHolder();
       viewHolder.deviceAddress = (TextView) view.findViewById(R.id.tv_address);

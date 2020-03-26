@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Theme.AppCompat.NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    style="@style/Theme.AppCompat.NoActionBar">
+    tools:context=".MainActivity">
+
     <TextView
         android:id="@+id/tv_status"
         android:layout_width="wrap_content"
@@ -20,25 +20,139 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_scan"
+            android:id="@+id/btn_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:onClick="Scan"
-            android:text="Scan" />
-
-        <Button
-            android:id="@+id/btn_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="Cancel"
-            android:text="Cancel" />
+            android:onClick="Connect"
+            android:text="connect" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listViewBleDevice"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/textview_border"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="身體面向"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tv_gyro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="正躺"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/textview_border"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="溫度(環境/體溫)"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tv_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="25/36 度"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/textview_border"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="心跳(BPM)"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tv_ECG"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="0"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/textview_border"
+            android:layout_margin="3dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="呼吸次數"
+                android:textSize="20sp" />
+            <TextView
+                android:id="@+id/tv_breath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="0"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ECG"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"/>
+    <com.example.babyapp.Scope2
+        android:id="@+id/scope2_ECG"
+        android:layout_width="match_parent"
+        android:layout_height="117dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/scope_border"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="聲音"
+        android:gravity="center"
+        android:textSize="20sp" />
+    <com.example.babyapp.Scope2
+        android:id="@+id/scope2_Sound"
+        android:layout_width="match_parent"
+        android:layout_height="117dp"
+        android:background="@drawable/scope_border"/>
+
+
 </LinearLayout>
